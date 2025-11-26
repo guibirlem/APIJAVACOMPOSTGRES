@@ -1,10 +1,7 @@
 package br.com.ulbra.apirest.controllers;
 
-import br.com.ulbra.apirest.dto.users.UserResponseDTO;
-import br.com.ulbra.apirest.entities.User;
+import br.com.ulbra.apirest.entities.Usuario;
 import br.com.ulbra.apirest.services.UserService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -22,33 +19,40 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserResponseDTO>> getUsers(Pageable pageable) {
-        Page<UserResponseDTO> page = this.userService.getUsers(pageable);
-        return ResponseEntity.ok(page.getContent());
+    public ResponseEntity<List<Usuario>> getUsers() {
+        System.out.println("GET /users");
+        List<Usuario> users = this.userService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id) {
+    public ResponseEntity<Usuario> getUser(@PathVariable Long id) {
+        System.out.println("GET /users/" + id);
         return ResponseEntity.ok(this.userService.getUser(id));
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
-        User updatedUser = this.userService.updateUser(id, user);
+    public ResponseEntity<Usuario> updateUser(@PathVariable Long id, @RequestBody Usuario user) {
+        System.out.println("PUT /users/" + id);
+        Usuario updatedUser = this.userService.updateUser(id, user);
         return ResponseEntity.ok(updatedUser);
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<Usuario> createUser(@RequestBody Usuario user) {
+        System.out.println("POST /users");
+        Usuario createdUser = this.userService.createUser(user);
+
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(user.getId()).toUri();
+                .buildAndExpand(createdUser.getId()).toUri();
 
-        return ResponseEntity.created(uri).body(this.userService.createUser(user));
+        return ResponseEntity.created(uri).body(createdUser);
     }
 
-        @DeleteMapping("/{id}")
-         public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-         this.userService.deleteUser(id);
-         return ResponseEntity.ok("Usuário deletado");
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        System.out.println("DELETE /users/" + id);
+        this.userService.deleteUser(id);
+        return ResponseEntity.ok("Usuário deletado");
     }
-
 }

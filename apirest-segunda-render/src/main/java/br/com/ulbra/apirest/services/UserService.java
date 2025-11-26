@@ -1,60 +1,44 @@
 package br.com.ulbra.apirest.services;
 
-import br.com.ulbra.apirest.dto.users.UserPostDTO;
-import br.com.ulbra.apirest.dto.users.UserResponseDTO;
-import br.com.ulbra.apirest.entities.User;
-import br.com.ulbra.apirest.repositories.UserRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import br.com.ulbra.apirest.entities.Usuario;
+import br.com.ulbra.apirest.repositories.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
 @Service
 public class UserService {
-    private UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    private final UsuarioRepository userRepository;
+
+    public UserService(UsuarioRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public User getUser(Long id) {
-        return this.userRepository.findById(id).orElseThrow();
+    public List<Usuario> getAllUsers() {
+        return userRepository.findAll();
     }
 
-    public Page<UserResponseDTO> getUsers(Pageable pageable) {
-        return this.userRepository.findAll(pageable)
-                .map(item -> new UserResponseDTO(
-                        item.getId(),
-                        item.getName(),
-                        item.getEmail(),
-                        item.getPosts().stream().map(
-                                posts -> new UserPostDTO(posts.getContent())
-                        ).toList()
-                ));
+    public Usuario getUser(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + id));
     }
 
-    public User createUser(User user) {
-        return this.userRepository.save(user);
+    public Usuario createUser(Usuario user) {
+        return userRepository.save(user);
+    }
+
+    public Usuario updateUser(Long id, Usuario user) {
+        Usuario existing = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + id));
+        existing.setNome(user.getNome());
+        existing.setEmail(user.getEmail());
+        return userRepository.save(existing);
     }
 
     public void deleteUser(Long id) {
-        User user = this.userRepository.findById(id).orElseThrow();
-        this.userRepository.delete(user);
-    }
-
-    public User updateUser(Long id, User updatedData) {
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
-
-        existingUser.setName(updatedData.getName());
-        existingUser.setEmail(updatedData.getEmail());
-
-        if (updatedData.getPassword() != null && !updatedData.getPassword().isEmpty()) {
-            existingUser.setPassword(updatedData.getPassword());
-        }
-
-        return userRepository.save(existingUser);
+        Usuario user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + id));
+        userRepository.delete(user);
     }
 }

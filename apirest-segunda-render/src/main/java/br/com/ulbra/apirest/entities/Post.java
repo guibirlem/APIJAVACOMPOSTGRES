@@ -1,24 +1,28 @@
 package br.com.ulbra.apirest.entities;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
+@Table(name = "tb_post")
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String content;
+    private String descricao;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
+    private Usuario user;
 
     public Post() {}
 
-    public Post(Long id, String content, User user) {
+    public Post(Long id, String descricao, Usuario user) {
         this.id = id;
-        this.content = content;
+        this.descricao = descricao;
         this.user = user;
     }
 
@@ -30,19 +34,27 @@ public class Post {
         this.id = id;
     }
 
-    public String getContent() {
-        return content;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
-    public User getUser() {
+    public Usuario getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(Usuario user) {
         this.user = user;
     }
+    public Usuario getUsuario() {
+        return getUser();
+    }
+
+    public void setUsuario(Usuario usuario) {
+        setUser(usuario);
+    }
 }
+

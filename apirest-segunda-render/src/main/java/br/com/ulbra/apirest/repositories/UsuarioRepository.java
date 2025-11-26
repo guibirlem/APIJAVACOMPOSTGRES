@@ -1,8 +1,10 @@
 package br.com.ulbra.apirest.repositories;
 
-import br.com.ulbra.apirest.entities.User;
+import br.com.ulbra.apirest.entities.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {}
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+}
+

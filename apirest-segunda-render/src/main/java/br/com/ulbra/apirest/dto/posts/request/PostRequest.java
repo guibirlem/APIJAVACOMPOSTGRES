@@ -1,29 +1,29 @@
 package br.com.ulbra.apirest.dto.posts.request;
 
 public class PostRequest {
-    private Long userId;
-    private String content;
+    private Long usuarioId;
+    private String descricao;
 
     public PostRequest(){}
 
-    public PostRequest(Long userId, String content) {
-        this.userId = userId;
-        this.content = content;
+    public PostRequest(Long usuarioId, String descricao) {
+        this.usuarioId = usuarioId;
+        this.descricao = descricao;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getUsuarioId() {
+        return usuarioId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUsuarioId(Long usuarioId) {
+        this.usuarioId = usuarioId;
     }
 
-    public String getContent() {
-        return content;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 }

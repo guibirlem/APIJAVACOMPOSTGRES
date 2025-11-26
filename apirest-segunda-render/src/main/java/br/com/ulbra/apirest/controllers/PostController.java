@@ -3,7 +3,6 @@ package br.com.ulbra.apirest.controllers;
 import br.com.ulbra.apirest.dto.MessageDTO;
 import br.com.ulbra.apirest.dto.posts.request.PostRequest;
 import br.com.ulbra.apirest.dto.posts.response.PostResponseDTO;
-import br.com.ulbra.apirest.entities.Post;
 import br.com.ulbra.apirest.services.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +12,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/posts")
+@RequestMapping({"/posts", "/tarefas"})
 public class PostController {
     private final PostService postService;
 
@@ -32,8 +31,8 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody PostRequest postRequest) {
-        Post post = this.postService.createPost(postRequest);
+    public ResponseEntity<PostResponseDTO> createPost(@RequestBody PostRequest postRequest) {
+        PostResponseDTO post = this.postService.createPost(postRequest);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(post.getId()).toUri();

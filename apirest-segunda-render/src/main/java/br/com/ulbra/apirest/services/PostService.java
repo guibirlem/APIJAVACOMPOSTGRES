@@ -1,13 +1,13 @@
 package br.com.ulbra.apirest.services;
 
-import br.com.ulbra.apirest.dto.MessageDTO;
 import br.com.ulbra.apirest.dto.posts.request.PostRequest;
 import br.com.ulbra.apirest.dto.posts.response.PostResponseDTO;
-import br.com.ulbra.apirest.dto.posts.response.PostUserDTO;
+import br.com.ulbra.apirest.dto.posts.response.PostResponseDTO.PostUserDTO;
+import br.com.ulbra.apirest.dto.MessageDTO;
 import br.com.ulbra.apirest.entities.Post;
-import br.com.ulbra.apirest.entities.User;
+import br.com.ulbra.apirest.entities.Usuario;
 import br.com.ulbra.apirest.repositories.PostRepository;
-import br.com.ulbra.apirest.repositories.UserRepository;
+import br.com.ulbra.apirest.repositories.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,47 +15,47 @@ import java.util.List;
 @Service
 public class PostService {
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository) {
+    public PostService(PostRepository postRepository, UsuarioRepository usuarioRepository) {
         this.postRepository = postRepository;
-        this.userRepository = userRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     public List<PostResponseDTO> getAllPosts() {
         return this.postRepository.findAll()
                 .stream()
-                .map(item ->
-                        new PostResponseDTO(
-                                item.getId(),
-                                item.getContent(),
-                                new PostUserDTO(
-                                        item.getUser().getId(),
-                                        item.getUser().getName()
-                                )
-                        )).toList();
+                .map(item -> new PostResponseDTO(
+                        item.getId(),
+                        item.getDescricao(),
+                        new PostUserDTO(item.getUsuario().getId(), item.getUsuario().getNome())
+                ))
+                .toList();
     }
 
     public PostResponseDTO getPostById(Long id) {
         Post post = postRepository.findById(id).orElseThrow();
         return new PostResponseDTO(
                 post.getId(),
-                post.getContent(),
-                new PostUserDTO(
-                        post.getUser().getId(),
-                        post.getUser().getName()
-                )
+                post.getDescricao(),
+                new PostUserDTO(post.getUsuario().getId(), post.getUsuario().getNome())
         );
     }
 
-    public Post createPost(PostRequest postRequest) {
-        User user = userRepository.findById(postRequest.getUserId()).orElseThrow();
+    public PostResponseDTO createPost(PostRequest request) {
+        Usuario usuario = usuarioRepository.findById(request.getUsuarioId()).orElseThrow();
 
         Post post = new Post();
-        post.setContent(postRequest.getContent());
-        post.setUser(user);
+        post.setDescricao(request.getDescricao());
+        post.setUsuario(usuario);
 
-        return postRepository.save(post);
+        Post saved = postRepository.save(post);
+
+        return new PostResponseDTO(
+                saved.getId(),
+                saved.getDescricao(),
+                new PostUserDTO(saved.getUsuario().getId(), saved.getUsuario().getNome())
+        );
     }
 
     public MessageDTO deletePost(Long id) {
@@ -64,25 +64,20 @@ public class PostService {
         return new MessageDTO("Post deletado com sucesso");
     }
 
-    public PostResponseDTO updatePost(Long id, PostRequest postRequest) {
+    public PostResponseDTO updatePost(Long id, PostRequest request) {
         Post post = postRepository.findById(id).orElseThrow();
+        post.setDescricao(request.getDescricao());
 
-        post.setContent(postRequest.getContent());
-
-        if (postRequest.getUserId() != null) {
-            User user = userRepository.findById(postRequest.getUserId()).orElseThrow();
-            post.setUser(user);
+        if (request.getUsuarioId() != null) {
+            Usuario usuario = usuarioRepository.findById(request.getUsuarioId()).orElseThrow();
+            post.setUsuario(usuario);
         }
 
-        Post updatedPost = postRepository.save(post);
-
+        Post updated = postRepository.save(post);
         return new PostResponseDTO(
-                updatedPost.getId(),
-                updatedPost.getContent(),
-                new PostUserDTO(
-                        updatedPost.getUser().getId(),
-                        updatedPost.getUser().getName()
-                )
+                updated.getId(),
+                updated.getDescricao(),
+                new PostUserDTO(updated.getUsuario().getId(), updated.getUsuario().getNome())
         );
     }
 }

@@ -2,15 +2,15 @@ package br.com.ulbra.apirest.dto.posts.response;
 
 public class PostResponseDTO {
     private Long id;
-    private String content;
-    private PostUserDTO user;
+    private String descricao;
+    private PostUserDTO usuario;
 
     public PostResponseDTO() {}
 
-    public PostResponseDTO(Long id, String content, PostUserDTO user) {
+    public PostResponseDTO(Long id, String descricao, PostUserDTO usuario) {
         this.id = id;
-        this.content = content;
-        this.user = user;
+        this.descricao = descricao;
+        this.usuario = usuario;
     }
 
     public Long getId() {
@@ -21,21 +21,47 @@ public class PostResponseDTO {
         this.id = id;
     }
 
-    public String getContent() {
-        return content;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
-    public PostUserDTO getUser() {
-        return user;
+    public PostUserDTO getUsuario() {
+        return usuario;
     }
 
-    public void setUser(PostUserDTO user) {
-        this.user = user;
+    public void setUsuario(PostUserDTO usuario) {
+        this.usuario = usuario;
     }
 
-    public record MessageDTO(String message) {}
+    public static class PostUserDTO {
+        private Long id;
+        private String nome;
+
+        public PostUserDTO() {}
+
+        public PostUserDTO(Long id, String nome) {
+            this.id = id;
+            this.nome = nome;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public String getNome() {
+            return nome;
+        }
+
+        public void setNome(String nome) {
+            this.nome = nome;
+        }
+    }
 }
