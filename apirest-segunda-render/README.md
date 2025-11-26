@@ -139,11 +139,3 @@ Corpos esperados:
 
 ---
 
-## Observações e boas práticas
-- Mantenha nomes consistentes: use `Usuario` e `Post` (ou unifique para `User`/`Post`) em todo o projeto.
-- Se tiver problemas de referência circular no JSON, use `@JsonIdentityInfo` nas entidades ou DTOs de saída.
-- Verifique se não existem classes duplicadas (`User` e `Usuario`) no pacote `br.com.ulbra.apirest.entities`.
-
----
-
-Se quiser, eu adapto o README para incluir exemplos curl, Swagger/OpenAPI ou scripts de inicialização (data.sql) — diga qual prefere.
